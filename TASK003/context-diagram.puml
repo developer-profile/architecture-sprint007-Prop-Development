@@ -1,0 +1,22 @@
+@startuml PropDevelopment Smart Home Context
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Context.puml
+
+title Контекстная диаграмма PropDevelopment Smart Home (Context Diagram)
+
+Person(resident, "Собственник", "Доступ к IoT-устройствам (IoT devices): интерком, барьер/шлагбаум (intercom, barrier/gate)")
+
+System(mobile_app, "Мобильное приложение PropDevelopment (Mobile App)", "Клиентское приложение PropDevelopment (Client Application)")
+System(prop_system, "Сервер PropDevelopment (PropDevelopment Server)", "Корпоративная система управления (Enterprise Management System)")
+
+System_Ext(smart_intercom, "Интеллектуальный домофон (Smart Intercom)", "Remote unlock, биометрическая аутентификация (biometric authentication)")
+System_Ext(smart_barrier, "Интеллектуальный шлагбаум (Smart Barrier)", "ANPR-система распознавания номеров (ANPR system)")
+System_Ext(partner_service, "Партнерский сервис (Partner Service)", "IoT-платформа управления устройствами (IoT Device Management Platform)")
+
+Rel(resident, mobile_app, "API-запросы (API Requests)", "GET/POST HTTPS")
+
+Rel(mobile_app, prop_system, "REST API-вызовы (REST API Calls)", "GET/POST HTTPS")
+Rel(prop_system, partner_service, "Межсистемное взаимодействие (Inter-system Communication)", "HTTPS/OAuth2.0")
+Rel(partner_service, smart_intercom, "Управление устройством (Device Control)")
+Rel(partner_service, smart_barrier, "Управление устройством (Device Control)")
+
+@enduml

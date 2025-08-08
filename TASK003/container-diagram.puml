@@ -1,0 +1,37 @@
+@startuml PropDevelopment Smart Home Containers
+!include https://raw.githubusercontent.com/plantuml-stdlib/C4-PlantUML/master/C4_Container.puml
+
+title Диаграмма контейнеров PropDevelopment Smart Home (Container Diagram)
+
+Person(resident, "Собственник", "Доступ к IoT-экосистеме (IoT ecosystem): интерком, барьер")
+
+System_Boundary(prop_development, "PropDevelopment Platform") {
+    Container(mobile_app, "Мобильное приложение PropDevelopment (Mobile App)", "iOS/Android", "Клиентское приложение (Client Application)")
+
+    Container(smart_home_service, "Сервис умного дома (Smart Home Service)", "Kotlin, Spring Boot", "Микросервис IoT-управления (IoT Management Microservice)")
+
+    Container(barrier_service, "Сервис барьера (Barrier Service)", "Kotlin, Spring Boot", "Микросервис управления шлагбаумом (Barrier Management Microservice)")
+    Container(barrier_service_db, "БД барьера (Barrier DB)", "PostgreSQL", "База данных конфигураций барьера (Barrier Configuration Database)")
+
+    Container(intercom_service, "Сервис интеркома (Intercom Service)", "Kotlin, Spring Boot", "Микросервис управления домофоном (Intercom Management Microservice)")
+    Container(intercom_service_db, "БД интеркома (Intercom DB)", "PostgreSQL", "База данных конфигураций интеркома (Intercom Configuration Database)")
+}
+
+System_Ext(partner_service, "Партнерский сервис (Partner Service)", "IoT API-платформа (IoT API Platform)")
+System_Ext(smart_intercom, "Интеллектуальный домофон (Smart Intercom)", "Remote unlock, биометрическая аутентификация (biometric authentication)")
+System_Ext(smart_barrier, "Интеллектуальный шлагбаум (Smart Barrier)", "ANPR-система распознавания номеров (ANPR system)")
+
+Rel(resident, mobile_app, "HTTP-запросы (HTTP Requests)", "GET/POST HTTPS")
+Rel(mobile_app, smart_home_service, "REST API-вызовы (REST API Calls)", "HTTPS")
+
+Rel(smart_home_service, partner_service, "Внешние API-запросы (External API Requests)", "HTTPS/OAuth2.0")
+Rel(smart_home_service, intercom_service, "Внутренние API-вызовы (Internal API Calls)", "REST")
+Rel(smart_home_service, barrier_service, "Внутренние API-вызовы (Internal API Calls)", "REST")
+
+Rel(intercom_service, intercom_service_db, "Конфигурации пользователей (User Configurations)", "JDBC")
+Rel(barrier_service, barrier_service_db, "Конфигурации пользователей (User Configurations)", "JDBC")
+
+Rel(partner_service, smart_intercom, "Управление устройством (Device Control)")
+Rel(partner_service, smart_barrier, "Управление устройством (Device Control)")
+
+@enduml
